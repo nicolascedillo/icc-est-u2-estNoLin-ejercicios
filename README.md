@@ -1,187 +1,162 @@
-# Estructuras No Lineales – Ejercicios Árboles
 
-Este proyecto contiene la solución a cuatro ejercicios prácticos sobre estructuras de datos tipo árbol binario, como parte del aprendizaje de estructuras no lineales en Java. Cada ejercicio se encuentra organizado en su propia carpeta, siguiendo la convención de paquetes y buenas prácticas.
+# Práctica de Arboles Binarios
 
----
+## 📌 Información General
 
-## Identificación del Estudiante (Obligatorio)
-
-Antes de comenzar a programar o ejecutar el proyecto, **debes completar tu nombre y correo institucional en el archivo `student.env`** que se encuentra en la raíz del proyecto. Este archivo es necesario para validar tu identidad como autor del trabajo.
-
-### ¿Por qué es obligatorio?
-
-Este proyecto utiliza una verificación automática que valida que has ingresado tu información personal. Si no lo haces:
-
-- Al ejecutar el proyecto (`App.java`) verás este mensaje de error:
-```
-❌ Debes completar STUDENT_NAME y STUDENT_EMAIL en student.env
-```
-- No podrás enviar tu código (`push`) al repositorio si tienes activado el sistema de validación local.
-- Las pruebas automáticas en GitHub Actions también fallarán si no detectan tu nombre y correo.
-
-### ¿Qué debo hacer?
-
-1. Abre el archivo `student.env` que ya está creado en el proyecto.
-2. Rellena tus datos:
-
-```
-STUDENT_NAME=Tu Nombre Completo
-STUDENT_EMAIL=tu.correo@institucion.edu.ec
-```
-
-
-3. **No borres estas líneas ni cambies los nombres de las variables.**
-4. Guarda los cambios y vuelve a ejecutar el programa o hacer push.
-
-> 💡 Este mecanismo asegura la autoría del código y que cada estudiante reciba su evaluación automática de forma personalizada.
+- **Título:** Práctica de Arboles Binarios
+- **Asignatura:** Estructura de Datos
+- **Carrera:** Computación
+- **Estudiante:** Nicolás Cedillo
+- **Fecha:** 4 de julio de 2025
+- **Profesor:** Ing. Pablo Torres
 
 ---
 
+## 🛠️ Descripción
 
+Práctica de los 4 ejercicios de Arboles Binarios:
+- Inserción de nodos
+- Inversión de árboles
+- Listado de niveles
+- Cálculo de profundidad
 
+Explicación de cada ejercicio:
 
-## Explicación para el estudiante
+### Ejercicio 1: Inserción de Nodos
+Metodo donde se insertan nodos con valores enteros. El método se encarga de colocar el nodo en la posicion correcta
 
-```
-src/
-│
-├── Materia/
-│
-├── Ejercicio_01_insert/
-├── Ejercicio_02_invert/
-├── Ejercicio_03_listLeves/
-└── Ejercicio_04_depth/
-```
+```java
+    public Node insert(Node node, int value) {
+    if (node == null) {
+      Node newNode = new Node(value); //Se crea un nuevi nodo para la raiz
+      return newNode;
+    }
 
----
+    if (value < node.getValue()) {
+      node.setLeft(insert(node.getLeft(), value)); // Metodo recursivo para insertar en la iquierda
 
-## Descripción de Ejercicios
+    } else if (value > node.getValue()) {
+      node.setRight(insert(node.getRight(), value)); // Metodo recursivo para insertar en la derecha
+    } 
 
-### Ejercicio 01: Insertar en un Árbol Binario de Búsqueda (BST)
-
-Carpeta: `Ejercicio_01_insert`
-Implementa un algoritmo para insertar nodos en un Árbol Binario de Búsqueda.
-
- **Input de ejemplo:** `[5, 3, 7, 2, 4, 6, 8]`
- **Output esperado:**
-
-```
-    5
-  3   7
- 2 4 6 8
+    return node;
+  }
 ```
 
----
+### Ejercicio 2: Inversión de Árboles
+Se implementa un método para invertir un árbol binario, intercambiando recursivamente los nodos hijos izquierdo y derecho de cada nodo.
 
-### Ejercicio 02: Invertir un Árbol Binario
+```java
+    public Node invertTree(Node root){
+        if(root == null) {
+            return null; // Si el nodo es nulo, no hay nada que invertir
+        }
+        Node temp = root.getLeft(); // Se guarda el hijo izquierdo en un temp
 
-📂 Carpeta: `Ejercicio_02_invert`
-Dada la raíz de un árbol binario, el algoritmo devuelve su versión invertida (espejo).
+        root.setLeft(invertTree(root.getRight())); // Se invierte el hijo derecho
+        root.setRight(invertTree(temp)); // Se invierte el hijo izquierdo
 
- **Input de ejemplo:**
-
-```
-    4
-  2   7
-1  3 6  9
-```
-
-**Output esperado:**
-
-```
-    4
-  7   2
-9  6 3  1
+        return root;
+    }
 ```
 
----
+### Ejercicio 3: Listado de Niveles
+Se implementa un método que lista los nodos de un árbol binario por niveles.
 
-### Ejercicio 03: Listar Niveles en Listas Enlazadas
+```java
+    public List<List<Node>> listLevels(Node root){
+        List<List<Node>> list = new ArrayList<>(); //Lista de listas
 
-📂 Carpeta: `Ejercicio_03_listLeves`
-Devuelve una lista enlazada con los nodos por nivel. Si hay N niveles, se obtienen N listas.
+        LinkedList<Node> rootLista = new LinkedList<>();
+        rootLista.add(root); // Se agrega la raiz a la lista
 
- **Input de ejemplo:**
+        while(!rootLista.isEmpty()){ // Mientras la lista no esté vacía
 
+            List<Node> level = new ArrayList<>(); // Lista del nievel
+            int size = rootLista.size(); // Tamaño de la lista actual
+
+            for(int i = 0; i < size; i++){
+
+                Node currentNode = rootLista.poll(); // Se obtiene el primer nodo de la lista
+                level.add(currentNode); // Se agrega el nodo actual a la lista del nivel
+
+                if(currentNode.getLeft() != null){
+                    rootLista.add(currentNode.getLeft()); // Si el hijo izquierdo no es nulo se agrega a la lista
+                }
+
+                if(currentNode.getRight() != null){
+                    rootLista.add(currentNode.getRight()); // Si el hijo derecho no es nulo se agrega a la lista
+                }
+
+            }
+            list.add(level); // Se agrega la lista del nivel a la lista de listas
+        }
+
+        return list;
+    }
 ```
-    4
-  2   7
-1  3 6  9
-```
 
-**Output esperado:**
+### Ejercicio 4: Cálculo de Profundidad
+Se implementa un método que calcula la profundidad máxima de un árbol.
 
-```
-4  
-2 → 7  
-1 → 3 → 6 → 9
+
+```java
+    public int maxDepth(Node root){
+        if(root == null){
+            return 0; // Si es nulo la profundidad es 0
+        }
+        return 1 + Math.max(maxDepth(root.getLeft()), maxDepth(root.getRight()));
+        // Se retorna 1 + el maximo de la profundidad del hijo izquierdo y derecho
+    }
 ```
 
 ---
 
-### Ejercicio 04: Calcular la Profundidad Máxima
+## 🚀 Ejecución
 
-Carpeta: `Ejercicio_04_depth`
-Calcula la profundidad máxima de un árbol binario (la longitud del camino más largo desde la raíz hasta una hoja).
+Para ejecutar el proyecto:
 
-**Input de ejemplo:**
+1. Compila el código:
+    ```bash
+    javac App.java
+    ```
+2. Ejecuta la aplicación:
+    ```bash
+    java App
+    ```
 
+---
+
+## 🧑‍💻 Ejemplo de Salida
+
+```plaintext
+------EJERCICIO 1------
+Raiz: 5
+Hijo izq de la raíz: 3
+Hijo der de la raíz: 7
+Hijo izq del hijo izq: 2
+Hijo der del hijo izq: 4
+Hijo izq del hijo der: 6
+Hijo der del hijo der: 8
+------EJERCICIO 2------
+Raiz invertida: 4
+Hijo izq de la raíz invertida: 7
+Hijo der de la raíz invertida: 2
+Hijo izq del hijo izq invertido: 9
+Hijo der del hijo izq invertido: 6
+Hijo izq del hijo der invertido: 3
+Hijo der del hijo der invertido: 1
+
+-----EJERCICIO 3------
+Nivel 0: 4 -
+Nivel 1: 2 - 7 -
+Nivel 2: 1 - 3 - 6 - 9 -
+
+-----EJERCICIO 4------
+Profundidad máxima: 3 (mismo arbol del ejecicio 3)
 ```
-    4
-  2   7
-1  3  
-8
-```
-
-**Output esperado:** `4`
 
 ---
 
-## Indicaciones Generales
 
-* Lee cuidadosamente el enunciado de cada ejercicio.
-* Cada carpeta debe contener:
-
-  * Código fuente Java.
-  * Casos de prueba.
-  * Comentarios claros.
-* Realiza commit y push con el mensaje:
-
-  ```
-  Estructuras No Lineales – Ejercicios Árboles
-  ```
-* En el AVAC, sube la **URL del repositorio** con el código.
-
----
-
-## No se calificará si:
-
-* No hay commit con los ejercicios.
-* No se incluye este README explicativo.
-* Las clases o métodos no siguen los nombres requeridos.
-
----
-
-## Rúbrica de Calificación
-
-| **Criterio**       | **Descripción**                                                                       | **Puntaje** |
-| ------------------ | ------------------------------------------------------------------------------------- | ----------- |
-| **Informe**        | No hay informe                                                                        | 0 pts       |
-|                    | Informe parcial **sin explicación** de cada método                                    | 1 pt        |
-|                    | Informe parcial **con explicación** de cada método                                    | 2 pts       |
-|                    | Informe completo                                                                      | 3 pts       |
-| **Funcionamiento** | No implementado                                                                       | 0 pts       |
-|                    | Implementado parcialmente: <br>• Ejercicio 1 y 4 → 2 pts<br>• Ejercicio 2 y 3 → 4 pts | 2–4 pts     |
-|                    | Código funcional pero **no pasa todas las pruebas**                                   | 6 pts       |
-|                    | Código funcional y **pasa todas las pruebas correctamente**                           | 7 pts       |
-
-
-
-## Contribuir
-
-Para contribuir a este proyecto, por favor crea un fork y envía una solicitud de extracción, o simplemente abre un issue con tus comentarios y sugerencias.
-
-## Autores
-
-- [PABLO TORRES] - Desarrollo inicial
 
